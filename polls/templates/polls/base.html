@@ -76,7 +76,7 @@
                 <div class="info">
                     <a href="#">
                         <span>
-                             Lenya Hope
+                             {{ user.first_name }} {{ user.last_name }}
                         </span>
                     </a>
                     <div class="clearfix"></div>
@@ -99,7 +99,7 @@
                 </li>
 
                 <li class="">
-                    <a href="#">
+                    <a href="{% url 'polls:profile' %}">
                         <i class="material-icons">person</i>
                         <p> Profile </p>
                     </a>
@@ -150,7 +150,7 @@
                                 </p>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">Profile</a></li>
+                                <li><a href="{% url 'polls:profile' %}">Profile</a></li>
                                 <li><a href="#">Settings</a></li>
                                 <li><a href="{% url 'logout' %}">Logout</a></li>
                             </ul>

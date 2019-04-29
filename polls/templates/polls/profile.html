@@ -1,0 +1,119 @@
+{% extends "polls/base.html" %}
+
+{% block title %}Profile{% endblock %}
+{% block heading %}User Profile and Password{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+
+                {% if profile_form.errors %}
+                    <p>{{ profile_form.errors }}</p>
+                {% endif %}
+
+                <form id="RegisterValidation" action="{% url 'polls:profile' %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="card-header card-header-icon" data-background-color="rose">
+                        <i class="material-icons">contacts</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">User Profile</h4>
+                        <div class="form-group label-floating">
+                            <label class="control-label">
+                                Email Address
+                            </label>
+                            <input class="form-control" disabled
+                                   value="{{ user.email }}"
+                                   required="true"/>
+                        </div>
+
+                        <div class="form-group label-floating">
+                            <label class="control-label">
+                                Username
+                            </label>
+                            <input class="form-control"
+                                   disabled
+                                   value="{{ user.username }}"
+                                   type="text"/>
+                        </div>
+
+                        <div class="form-group label-floating">
+                            <label class="control-label">
+                                First Name
+                                <small>*</small>
+                            </label>
+                            <input class="form-control"
+                                   name="first_name"
+                                   value="{% if profile_form.first_name.value %}{{ profile_form.first_name.value }}{% else %}{{ user.first_name }}{% endif %}"
+                                   type="text"/>
+                        </div>
+
+                        <div class="form-group label-floating">
+                            <label class="control-label">
+                                Last Name
+                                <small>*</small>
+                            </label>
+                            <input class="form-control"
+                                   name="last_name"
+                                   value="{% if profile_form.last_name.value %}{{ profile_form.last_name.value }}{% else %}{{ user.last_name }}{% endif %}"
+                                   type="text"/>
+                        </div>
+
+
+                        <div class="category form-category">
+                            <small>*</small>
+                            Required fields
+                        </div>
+
+                        <div class="form-footer text-right">
+                            <button type="submit" class="btn btn-rose btn-fill">Update Profile</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <form id="LoginValidation" action="" method="">
+                    <div class="card-header card-header-icon" data-background-color="rose">
+                        <i class="material-icons">lock</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">Change Password</h4>
+                        <div class="form-group label-floating">
+                            <label class="control-label">Email Address
+                                <star>*</star>
+                            </label>
+                            <input class="form-control"
+                                   name="email"
+                                   type="text"
+                                   email="true"
+                                   required="true"
+                            />
+                        </div>
+                        <div class="form-group label-floating">
+                            <label class="control-label">Password
+                                <star>*</star>
+                            </label>
+                            <input class="form-control"
+                                   name="password"
+                                   type="password"
+                                   required="true"
+                            />
+                        </div>
+
+                        <div class="category form-category">
+                            <star>*</star>
+                            Required fields
+                        </div>
+
+                        <div class="form-footer text-right">
+                            <button type="submit" class="btn btn-rose btn-fill">Change Password</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+{% endblock %}
