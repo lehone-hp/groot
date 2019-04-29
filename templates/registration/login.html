@@ -1,0 +1,83 @@
+{% extends "registration/base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+    {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+
+    <div class="card">
+        <form id="LoginValidation" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+
+            <div class="card-header card-header-icon" data-background-color="rose">
+                <i class="material-icons">contacts</i>
+            </div>
+            <div class="card-content">
+                <h4 class="card-title">Login Form</h4>
+                <div class="form-group label-floating">
+                    <label class="control-label">{{ form.username.label_tag }}
+                        <star>*</star>
+                    </label>
+                    <input class="form-control"
+                           name="username"
+                           type="text"
+                           required="true"
+                    />
+                </div>
+                <div class="form-group label-floating">
+                    <label class="control-label">Password
+                        <star>*</star>
+                    </label>
+                    <input class="form-control"
+                           name="password"
+                           type="password"
+                           required="true"
+                    />
+                </div>
+
+                <div class="category form-category">
+                    <star>*</star>
+                    Required fields
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-rose btn-fill btn-wd btn-block">Login</button>
+                    <input type="hidden" name="next" value="{{ next }}">
+
+                    <hr>
+                    <p style="display: inline; float: left">
+                        <a href="{% url 'password_reset' %}">Lost password?</a></p>
+                    <p style="display: inline; float: right">
+                        <a href="{% url 'signup' %}">SignUp</a></p>
+                </div>
+
+                {# Assumes you setup the password_reset view in your URLconf #}
+
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block footer_script %}
+    <script type="text/javascript">
+
+        function setFormValidation(id) {
+            $(id).validate({
+                errorPlacement: function (error, element) {
+                    $(element).closest('div').addClass('has-error');
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            setFormValidation('#RegisterValidation');
+            setFormValidation('#TypeValidation');
+            setFormValidation('#LoginValidation');
+            setFormValidation('#RangeValidation');
+        });
+    </script>
+{% endblock %}
+
