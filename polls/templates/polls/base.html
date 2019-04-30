@@ -84,7 +84,7 @@
             </div>
             <ul class="nav">
 
-                <li class="active">
+                <li class="{% ifequal request.resolver_match.url_name 'dashboard' %}{{ 'active' }}{% endifequal %}">
                     <a href="{% url 'polls:dashboard' %}">
                         <i class="material-icons">dashboard</i>
                         <p> Dashboard </p>
@@ -98,7 +98,8 @@
                     </a>
                 </li>
 
-                <li class="">
+                <li class="{% ifequal request.resolver_match.url_name 'profile' %}{{ 'active' }}{% endifequal %}
+                           {% ifequal request.resolver_match.url_name 'change_password' %}{{ 'active' }}{% endifequal %}">
                     <a href="{% url 'polls:profile' %}">
                         <i class="material-icons">person</i>
                         <p> Profile </p>

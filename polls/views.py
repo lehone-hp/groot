@@ -1,5 +1,7 @@
-from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -34,7 +36,30 @@ def profile(request):
             return redirect('polls:profile')
     else:
         profile_form = EditProfileForm()
-    return render(request, 'polls/profile.html', {'profile_form': profile_form})
+        password_form = PasswordChangeForm(request.user)
+    return render(request, 'polls/profile.html', {
+        'profile_form': profile_form,
+        'password_form': password_form
+    })
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        password_form = PasswordChangeForm(request.user, request.POST)
+        if password_form.is_valid():
+            user = password_form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('polls:change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+        return render(request, 'polls/profile.html', {
+            'profile_form': EditProfileForm(),
+            'password_form': password_form
+        })
+    else:
+        return redirect('polls:profile')
 
 
 def signup(request):

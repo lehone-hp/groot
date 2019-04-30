@@ -48,6 +48,10 @@
                                    name="first_name"
                                    value="{% if profile_form.first_name.value %}{{ profile_form.first_name.value }}{% else %}{{ user.first_name }}{% endif %}"
                                    type="text"/>
+
+                            {% if profile_form.first_name.errors %}
+                                <p class="text-danger text-muted">{{ profile_form.first_name.errors|first }}</p>
+                            {% endif %}
                         </div>
 
                         <div class="form-group label-floating">
@@ -59,6 +63,10 @@
                                    name="last_name"
                                    value="{% if profile_form.last_name.value %}{{ profile_form.last_name.value }}{% else %}{{ user.last_name }}{% endif %}"
                                    type="text"/>
+
+                            {% if profile_form.last_name.errors %}
+                                <p class="text-danger text-muted">{{ profile_form.last_name.errors|first }}</p>
+                            {% endif %}
                         </div>
 
 
@@ -76,34 +84,51 @@
         </div>
         <div class="col-md-6">
             <div class="card">
-                <form id="LoginValidation" action="" method="">
+
+                <form id="LoginValidation" action="{% url 'polls:change_password' %}" method="POST">
+                    {% csrf_token %}
+
                     <div class="card-header card-header-icon" data-background-color="rose">
                         <i class="material-icons">lock</i>
                     </div>
                     <div class="card-content">
                         <h4 class="card-title">Change Password</h4>
                         <div class="form-group label-floating">
-                            <label class="control-label">Email Address
+                            <label class="control-label">Old Password
                                 <star>*</star>
                             </label>
                             <input class="form-control"
-                                   name="email"
-                                   type="text"
-                                   email="true"
-                                   required="true"
-                            />
+                                   name="old_password"
+                                   type="password"
+                                   required="true"/>
+                            {% if password_form.old_password.errors %}
+                                <p class="text-danger text-muted">{{ password_form.old_password.errors|first }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group label-floating">
+                            <label class="control-label">New Password
+                                <star>*</star>
+                            </label>
+                            <input class="form-control"
+                                   name="new_password1"
+                                   type="password"
+                                   required="true"/>
+
+                            {% if password_form.new_password2.errors %}
+                                <p class="text-danger text-muted">{{ password_form.new_password2.errors|first }}</p>
+                            {% endif %}
                         </div>
                         <div class="form-group label-floating">
-                            <label class="control-label">Password
+                            <label class="control-label">Confirm New Password
                                 <star>*</star>
                             </label>
                             <input class="form-control"
-                                   name="password"
+                                   name="new_password2"
                                    type="password"
                                    required="true"
                             />
                         </div>
-
                         <div class="category form-category">
                             <star>*</star>
                             Required fields
