@@ -17,6 +17,7 @@ class Poll(models.Model):
     name = models.CharField(max_length=200)
     max_votes = models.IntegerField(default=0)
     description = models.TextField(default=None)
+    start = models.DateTimeField('start date')
     expiration = models.DateTimeField('expiration date')
     status = models.CharField(max_length=2, choices=STATUS, default=CREATED)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

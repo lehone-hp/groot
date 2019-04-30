@@ -91,8 +91,9 @@
                     </a>
                 </li>
 
-                <li class="">
-                    <a href="#">
+                <li class="{% ifequal request.resolver_match.url_name 'elections' %}{{ 'active' }}{% endifequal %}
+                           {% ifequal request.resolver_match.url_name 'create_election' %}{{ 'active' }}{% endifequal %}">
+                    <a href="{% url 'polls:elections' %}">
                         <i class="material-icons">bubble_chart</i>
                         <p> Polls </p>
                     </a>
@@ -290,6 +291,8 @@ t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
         demo.initVectorMap();
     });
 </script>
+
+{% block footer_script %}{% endblock %}
 
 
 </html>

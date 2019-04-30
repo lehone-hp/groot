@@ -439,3 +439,15 @@
     float: left;
     width: 100%;
 }
+
+.display-inline {
+    display: inline !important;
+}
+
+.float-right {
+    float: right !important;
+}
+
+.w-100 {
+    width: 100% !important;
+}

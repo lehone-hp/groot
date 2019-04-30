@@ -25,6 +25,16 @@ def dashboard(request):
 
 
 @login_required
+def polls(request):
+    return render(request, 'polls/elections.html')
+
+
+@login_required
+def create_poll(request):
+    return render(request, 'polls/create_election.html')
+
+
+@login_required
 def profile(request):
     if request.method == 'POST':
         profile_form = EditProfileForm(request.POST)

@@ -1,0 +1,243 @@
+{% extends "polls/base.html" %}
+
+{% block title %}Elections{% endblock %}
+{% block heading %}All Elections{% endblock %}
+
+{% block content %}
+
+
+    <div class="card">
+        <div class="card-header card-header-tabs" data-background-color="rose">
+            <div class="nav-tabs-navigation">
+                <div class="nav-tabs-wrapper">
+                    <span class="nav-tabs-title">Elections:</span>
+                    <ul class="nav nav-tabs display-inline" data-tabs="tabs">
+                        <li class="active">
+                            <a href="#profile" data-toggle="tab">
+                                <i class="material-icons">bubble_chart</i>
+                                All
+                                <div class="ripple-container"></div>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="#messages" data-toggle="tab">
+                                <i class="material-icons">scatter_plot</i>
+                                Active
+                                <div class="ripple-container"></div>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="#settings" data-toggle="tab">
+                                <i class="material-icons">lock</i>
+                                Finished
+                                <div class="ripple-container"></div>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="#pending" data-toggle="tab">
+                                <i class="material-icons">update</i>
+                                Pending
+                                <div class="ripple-container"></div>
+                            </a>
+                        </li>
+                        <li class="float-right">
+                            <a href="{% url 'polls:create_election' %}" class="btn btn-primary">
+                                <i class="material-icons">library_add</i>
+                                Create Election
+                                <div class="ripple-container"></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-content">
+            <div class="tab-content">
+                <div class="tab-pane active" id="profile">
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6">
+                            <div class="card">
+                                <div class="card-header card-header-text" data-background-color="orange">
+                                    <h4 class="card-title">From 4A Class Prefect Election</h4>
+                                    <p class="category">15th September, 2016</p>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                        <tr>
+                                            <td class="text-warning">Status</td>
+                                            <td>Active</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Ends</td>
+                                            <td>27th March 2019</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Options</td>
+                                            <td>
+                                                <h6>Lenya Hope</h6>
+                                                <h6>Lenya Hope</h6>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="text-right">
+                                        <button class="btn btn-just-icon  btn-warning">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                            <div class="col-md-4 col-sm-6">
+                            <div class="card">
+                                <div class="card-header card-header-text" data-background-color="orange">
+                                    <h4 class="card-title">From 4A Class Prefect Election</h4>
+                                    <p class="category">15th September, 2016</p>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                        <tr>
+                                            <td class="text-warning">Status</td>
+                                            <td>Active</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Ends</td>
+                                            <td>27th March 2019</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Options</td>
+                                            <td>
+                                                <h6>Lenya Hope</h6>
+                                                <h6>Lenya Hope</h6>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="text-right">
+                                        <button class="btn btn-just-icon  btn-warning">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="messages">
+                    <div class="col-md-4 col-sm-6">
+                            <div class="card">
+                                <div class="card-header card-header-text" data-background-color="orange">
+                                    <h4 class="card-title">From 4A Class Prefect Election</h4>
+                                    <p class="category">15th September, 2016</p>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                        <tr>
+                                            <td class="text-warning">Status</td>
+                                            <td>Active</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Ends</td>
+                                            <td>27th March 2019</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Options</td>
+                                            <td>
+                                                <h6>Lenya Hope</h6>
+                                                <h6>Lenya Hope</h6>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="text-right">
+                                        <button class="btn btn-just-icon  btn-warning">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="tab-pane" id="settings">
+                    <div class="col-md-4 col-sm-6">
+                            <div class="card">
+                                <div class="card-header card-header-text" data-background-color="orange">
+                                    <h4 class="card-title">From 4A Class Prefect Election</h4>
+                                    <p class="category">15th September, 2016</p>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                        <tr>
+                                            <td class="text-warning">Status</td>
+                                            <td>Active</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Ends</td>
+                                            <td>27th March 2019</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Options</td>
+                                            <td>
+                                                <h6>Lenya Hope</h6>
+                                                <h6>Lenya Hope</h6>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="text-right">
+                                        <button class="btn btn-just-icon  btn-warning">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="tab-pane" id="pending">
+                    <div class="col-md-4 col-sm-6">
+                            <div class="card">
+                                <div class="card-header card-header-text" data-background-color="orange">
+                                    <h4 class="card-title">From 4A Class Prefect Election</h4>
+                                    <p class="category">15th September, 2016</p>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                        <tr>
+                                            <td class="text-warning">Status</td>
+                                            <td>Active</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Ends</td>
+                                            <td>27th March 2019</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Options</td>
+                                            <td>
+                                                <h6>Lenya Hope</h6>
+                                                <h6>Lenya Hope</h6>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="text-right">
+                                        <button class="btn btn-just-icon  btn-warning">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
