@@ -16,3 +16,11 @@ class SignUpForm(UserCreationForm):
 class EditProfileForm(forms.Form):
     first_name = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
+
+
+class CreateElectionForm(forms.Form):
+    name = forms.CharField(max_length=30, required=True)
+    description = forms.CharField(max_length=5000, required=True)
+    start_date = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'])
+    end_date = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'])
+    max_votes = forms.IntegerField()

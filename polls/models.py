@@ -6,9 +6,9 @@ from django.utils import timezone
 
 
 class Poll(models.Model):
-    CREATED = 'CR'
-    ACTIVE = 'AC'
-    FINISHED = 'FN'
+    CREATED = 'Created'
+    ACTIVE = 'Active'
+    FINISHED = 'Finished'
     STATUS = (
         (CREATED, 'Created'),
         (ACTIVE, 'Active'),
@@ -19,7 +19,7 @@ class Poll(models.Model):
     description = models.TextField(default=None)
     start = models.DateTimeField('start date')
     expiration = models.DateTimeField('expiration date')
-    status = models.CharField(max_length=2, choices=STATUS, default=CREATED)
+    status = models.CharField(max_length=20, choices=STATUS, default=CREATED)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -38,6 +38,7 @@ class Option(models.Model):
 
 
 class Voter(models.Model):
+    name = models.CharField(max_length=200)
     email = models.CharField(max_length=200)
     access_token = models.CharField(max_length=200)
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)

@@ -9,7 +9,8 @@ from django.shortcuts import render, redirect
 # Create your views here.
 from django.urls import reverse
 
-from polls.forms import SignUpForm, EditProfileForm
+from polls.forms import SignUpForm, EditProfileForm, CreateElectionForm
+from polls.models import Poll, Option
 
 
 def index(request):
@@ -26,12 +27,45 @@ def dashboard(request):
 
 @login_required
 def polls(request):
-    return render(request, 'polls/elections.html')
+    total = Poll.objects.all().order_by('-created_at')
+    pending = Poll.objects.filter(status=Poll.CREATED).order_by('-created_at')
+    active = Poll.objects.filter(status=Poll.ACTIVE).order_by('-created_at')
+    finished = Poll.objects.filter(status=Poll.FINISHED).order_by('-created_at')
+
+    return render(request, 'polls/elections.html', {
+        'total': total,
+        'active': active,
+        'pending': pending,
+        'finished': finished
+    })
 
 
 @login_required
 def create_poll(request):
-    return render(request, 'polls/create_election.html')
+    if request.method == 'POST':
+        form = CreateElectionForm(request.POST)
+        if form.is_valid():
+            poll = Poll()
+            poll.user = request.user
+            poll.name = form.cleaned_data.get('name')
+            poll.description = form.cleaned_data.get('description')
+            poll.max_votes = form.cleaned_data.get('max_votes')
+            poll.start = form.cleaned_data.get('start_date')
+            poll.expiration = form.cleaned_data.get('end_date')
+            poll.save()
+
+            candidates = request.POST.getlist('candidate[]')
+            if candidates:
+                for candidate in candidates:
+                    option = Option()
+                    option.name = candidate
+                    option.poll = poll
+                    option.save()
+
+            return redirect('polls:elections')
+    else:
+        form = CreateElectionForm()
+    return render(request, 'polls/create_election.html', {'form': form})
 
 
 @login_required

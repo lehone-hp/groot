@@ -23,6 +23,8 @@
     <!--  CSS for Demo Purpose, don't include it in your project     -->
     <link href="{% static 'polls/css/demo.css' %}" rel="stylesheet"/>
 
+    <link href="{% static 'polls/datetimepicker/build/jquery.datetimepicker.min.css' %}" rel="stylesheet"/>
+
     <!--     Fonts and icons     -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css"
@@ -210,7 +212,7 @@
 <!-- Forms Validations Plugin -->
 <script src="{% static 'polls/js/jquery.validate.min.js' %}"></script>
 
-<!--  Plugin for Date Time Picker and Full Calendar Plugin-->
+<!--  Plugin for Date Time Picker and Full Calendar Plugin -->
 <script src="{% static 'polls/js/moment.min.js' %}"></script>
 
 <!--  Charts Plugin, full documentation here: https://gionkunz.github.io/chartist-js/ -->
@@ -225,8 +227,10 @@
 <!--   Sharrre Library    -->
 <script src="{% static 'polls/js/jquery.sharrre.js' %}"></script>
 
-<!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
-<script src="{% static 'polls/js/bootstrap-datetimepicker.js' %}"></script>
+<!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/
+<script src="{#  static 'polls/js/bootstrap-datetimepicker.js' #}"></script>-->
+    <script src="{% static 'polls/datetimepicker/build/jquery.datetimepicker.full.js' %}"></script>
+
 
 <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
 <script src="{% static 'polls/js/jquery-jvectormap.js' %}"></script>

@@ -55,30 +55,31 @@
         <div class="card-content">
             <div class="tab-content">
                 <div class="tab-pane active" id="profile">
-
                     <div class="row">
+                        {% for poll in total %}
                         <div class="col-md-4 col-sm-6">
                             <div class="card">
                                 <div class="card-header card-header-text" data-background-color="orange">
-                                    <h4 class="card-title">From 4A Class Prefect Election</h4>
-                                    <p class="category">15th September, 2016</p>
+                                    <h4 class="card-title">{{ poll.name }}</h4>
+                                    <p class="category">{{ poll.created_at }}</p>
                                 </div>
                                 <div class="card-content table-responsive">
                                     <table class="table table-hover">
                                         <tbody>
                                         <tr>
                                             <td class="text-warning">Status</td>
-                                            <td>Active</td>
+                                            <td>{{ poll.status }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-warning">Ends</td>
-                                            <td>27th March 2019</td>
+                                            <td>{{ poll.expiration }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-warning">Options</td>
                                             <td>
-                                                <h6>Lenya Hope</h6>
-                                                <h6>Lenya Hope</h6>
+                                                {% for opt in poll.option_set.all %}
+                                                    <h6>{{ opt.name }}</h6>
+                                                {% endfor %}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -91,65 +92,35 @@
                                 </div>
                             </div>
                         </div>
-                            <div class="col-md-4 col-sm-6">
-                            <div class="card">
-                                <div class="card-header card-header-text" data-background-color="orange">
-                                    <h4 class="card-title">From 4A Class Prefect Election</h4>
-                                    <p class="category">15th September, 2016</p>
-                                </div>
-                                <div class="card-content table-responsive">
-                                    <table class="table table-hover">
-                                        <tbody>
-                                        <tr>
-                                            <td class="text-warning">Status</td>
-                                            <td>Active</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-warning">Ends</td>
-                                            <td>27th March 2019</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-warning">Options</td>
-                                            <td>
-                                                <h6>Lenya Hope</h6>
-                                                <h6>Lenya Hope</h6>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                    <div class="text-right">
-                                        <button class="btn btn-just-icon  btn-warning">
-                                            <i class="fa fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="tab-pane" id="messages">
-                    <div class="col-md-4 col-sm-6">
+                    <div class="row">
+                        {% for poll in active %}
+                        <div class="col-md-4 col-sm-6">
                             <div class="card">
                                 <div class="card-header card-header-text" data-background-color="orange">
-                                    <h4 class="card-title">From 4A Class Prefect Election</h4>
-                                    <p class="category">15th September, 2016</p>
+                                    <h4 class="card-title">{{ poll.name }}</h4>
+                                    <p class="category">{{ poll.created_at }}</p>
                                 </div>
                                 <div class="card-content table-responsive">
                                     <table class="table table-hover">
                                         <tbody>
                                         <tr>
                                             <td class="text-warning">Status</td>
-                                            <td>Active</td>
+                                            <td>{{ poll.status }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-warning">Ends</td>
-                                            <td>27th March 2019</td>
+                                            <td>{{ poll.expiration }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-warning">Options</td>
                                             <td>
-                                                <h6>Lenya Hope</h6>
-                                                <h6>Lenya Hope</h6>
+                                                {% for opt in poll.option_set.all %}
+                                                    <h6>{{ opt.name }}</h6>
+                                                {% endfor %}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -162,30 +133,35 @@
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="tab-pane" id="settings">
-                    <div class="col-md-4 col-sm-6">
+                    <div class="row">
+                        {% for poll in finished %}
+                        <div class="col-md-4 col-sm-6">
                             <div class="card">
                                 <div class="card-header card-header-text" data-background-color="orange">
-                                    <h4 class="card-title">From 4A Class Prefect Election</h4>
-                                    <p class="category">15th September, 2016</p>
+                                    <h4 class="card-title">{{ poll.name }}</h4>
+                                    <p class="category">{{ poll.created_at }}</p>
                                 </div>
                                 <div class="card-content table-responsive">
                                     <table class="table table-hover">
                                         <tbody>
                                         <tr>
                                             <td class="text-warning">Status</td>
-                                            <td>Active</td>
+                                            <td>{{ poll.status }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-warning">Ends</td>
-                                            <td>27th March 2019</td>
+                                            <td>{{ poll.expiration }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-warning">Options</td>
                                             <td>
-                                                <h6>Lenya Hope</h6>
-                                                <h6>Lenya Hope</h6>
+                                                {% for opt in poll.option_set.all %}
+                                                    <h6>{{ opt.name }}</h6>
+                                                {% endfor %}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -198,30 +174,35 @@
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="tab-pane" id="pending">
-                    <div class="col-md-4 col-sm-6">
+                    <div class="row">
+                        {% for poll in pending %}
+                        <div class="col-md-4 col-sm-6">
                             <div class="card">
                                 <div class="card-header card-header-text" data-background-color="orange">
-                                    <h4 class="card-title">From 4A Class Prefect Election</h4>
-                                    <p class="category">15th September, 2016</p>
+                                    <h4 class="card-title">{{ poll.name }}</h4>
+                                    <p class="category">{{ poll.created_at }}</p>
                                 </div>
                                 <div class="card-content table-responsive">
                                     <table class="table table-hover">
                                         <tbody>
                                         <tr>
                                             <td class="text-warning">Status</td>
-                                            <td>Active</td>
+                                            <td>{{ poll.status }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-warning">Ends</td>
-                                            <td>27th March 2019</td>
+                                            <td>{{ poll.expiration }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-warning">Options</td>
                                             <td>
-                                                <h6>Lenya Hope</h6>
-                                                <h6>Lenya Hope</h6>
+                                                {% for opt in poll.option_set.all %}
+                                                    <h6>{{ opt.name }}</h6>
+                                                {% endfor %}
                                             </td>
                                         </tr>
                                         </tbody>
@@ -234,6 +215,8 @@
                                 </div>
                             </div>
                         </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>

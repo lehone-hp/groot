@@ -1,4 +1,5 @@
 {% extends "polls/base.html" %}
+{% load static %}
 
 {% block title %}Create Election{% endblock %}
 {% block heading %}Create New Election{% endblock %}
@@ -8,7 +9,9 @@
         <!--      Wizard container        -->
         <div class="wizard-container">
             <div class="card wizard-card" data-color="rose" id="wizardProfile">
-                <form action="" method="">
+                <form action="{% url 'polls:create_election' %}" method="POST">
+                    {% csrf_token %}
+
                     <div class="wizard-navigation">
                         <ul>
                             <li><a href="#about" data-toggle="tab">Step 1</a></li>
@@ -20,19 +23,22 @@
                     <div class="tab-content">
                         <div class="tab-pane" id="about">
                             <h4 class="info-text"> Basic information about the Election</h4>
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Name
+                                            <small>(required)</small>
+                                        </label>
+                                        <input name="name" type="text" class="form-control" required>
+                                    </div>
 
-                            <div class="form-group label-floating">
-                                <label class="control-label">Name
-                                    <small>(required)</small>
-                                </label>
-                                <input name="name" type="text" class="form-control" required>
-                            </div>
-
-                            <div class="form-group label-floating">
-                                <label class="control-label">Description
-                                    <small>(required)</small>
-                                </label>
-                                <textarea name="description" class="form-control" required></textarea>
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Description
+                                            <small>(required)</small>
+                                        </label>
+                                        <textarea name="description" class="form-control" required></textarea>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="tab-pane" id="account">
@@ -53,7 +59,9 @@
                                                        type="text" id="candidate_name"/>
                                             </div>
                                             <div class="text-right">
-                                                <button type="button" id="add_candidate_btn" class="btn btn-rose">Add Candidate</button>
+                                                <button type="button" id="add_candidate_btn" class="btn btn-rose">Add
+                                                    Candidate
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -75,16 +83,46 @@
                             </div>
                         </div>
                         <div class="tab-pane" id="address">
-                                <div class="col-sm-12">
-                                    <h4 class="info-text"> Additional Settings </h4>
+                            <div class="col-sm-12">
+                                <h4 class="info-text"> Additional Settings </h4>
+                                <div class="card">
+                                    <div class="card-content">
+                                        <div class="form-group label-floating">
+                                            <label class="control-label">Start Date
+                                                <small>(required)</small>
+                                            </label>
+                                            <input type="text" class="form-control datetimepicker1"
+                                                   name="start_date" required />
+                                            <span class="bmd-help text-muted">Date and Time when the poll will be open for voting.</span>
+                                        </div>
+                                        <div class="form-group label-floating">
+                                            <label class="control-label">End Date
+                                                <small>(required)</small>
+                                            </label>
+                                            <input type="text" class="form-control datetimepicker1"
+                                                   name="end_date" required />
+                                            <span class="bmd-help text-muted">Date and Time when the poll will be closed for voting.</span>
+                                        </div>
+                                        <div class="form-group label-floating">
+                                            <label class="control-label">Max Candidate Selection
+                                                <small>(required)</small>
+                                            </label>
+                                            <input type="number" class="form-control"
+                                                   name="max_votes"
+                                                   value="1"
+                                                   required />
+                                            <span class="bmd-help text-muted">Maximum number of candidates each voter can select in a ballot.</span>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
                         </div>
                     </div>
                     <div class="wizard-footer">
                         <div class="pull-right">
                             <input type='button' class='btn btn-next btn-fill btn-rose btn-wd' name='next'
                                    value='Next'/>
-                            <input type='button' class='btn btn-finish btn-fill btn-rose btn-wd' name='finish'
+                            <input type='submit' class='btn btn-finish btn-fill btn-rose btn-wd' name='finish'
                                    value='Finish'/>
                         </div>
 
@@ -108,14 +146,18 @@
                 $('.card.wizard-card').addClass('active');
             }, 600);
 
+            $(".datetimepicker1").datetimepicker({
+                format: 'd/m/Y H:i',
+            });
+
             $('#add_candidate_btn').on('click', function () {
                 const new_name = $('#candidate_name').val();
 
                 if (new_name) {
                     $('#en_tbody').append(
                         '<tr>' +
-                        '    <td class="w-100">'+new_name+'' +
-                        '    <input type="hidden" name="candidate[]" value="'+new_name+'">' +
+                        '    <td class="w-100">' + new_name + '' +
+                        '    <input type="hidden" name="candidate[]" value="' + new_name + '">' +
                         '    </td>' +
                         '    <td>' +
                         '        <button type="button" onclick="removeTr(this)" class="btn btn-just-icon btn-simple btn-danger float-right remove_candidate">' +
@@ -128,6 +170,7 @@
                 $('#candidate_name').val('')
             });
         });
+
         function removeTr(button) {
             $(button).parent().parent().remove()
         }
