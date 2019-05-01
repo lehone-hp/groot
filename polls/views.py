@@ -83,6 +83,21 @@ def add_voter(request, poll_id):
 
 
 @login_required
+def remove_voter(request, voter_id):
+    voter = Voter.objects.get(pk=voter_id)
+    poll = voter.poll
+    if voter:
+        for vote in voter.vote_set.all():
+            option = vote.option
+            option.votes = option.votes - 1
+            option.save()
+            vote.delete()
+        voter.delete()
+
+    return redirect('/polls/' + str(poll.id) + '/?voter=true')
+
+
+@login_required
 def create_poll(request):
     if request.method == 'POST':
         form = CreateElectionForm(request.POST)

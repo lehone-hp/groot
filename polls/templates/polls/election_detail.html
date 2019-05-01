@@ -97,8 +97,9 @@
                             <tr>
                                 <th>SN</th>
                                 <th>Name</th>
-                                <th>Email</th>
                                 <th>Voted</th>
+                                <th>Email</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -106,13 +107,22 @@
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ voter.name }}</td>
-                                <td>{{ voter.email }}</td>
                                 <td>
                                     {% if voter.vote_set.count > 0 %}
                                     <i class="material-icons text-success">done</i>
                                     {% else %}
                                     <i class="material-icons text-danger">close</i>
                                     {% endif %}
+                                </td>
+                                <td>{{ voter.email }}</td>
+                                <td>
+                                    <button class="btn btn-just-icon btn-simple btn-primary">
+                                      <i class="material-icons">edit</i>
+                                    </button>
+                                    <button class="btn btn-just-icon btn-simple btn-danger"
+                                            onclick="showDeleteModal('{{ voter.name }}', {{ voter.id }})">
+                                        <i class="material-icons">delete</i>
+                                    </button>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -170,9 +180,9 @@
                         </thead>
                         <tbody>
                             {% for voter in poll.voter_set.all %}
-                                {% for vote in poll.vote_set.all %}
+                                {% for vote in voter.vote_set.all %}
                                     <tr>
-                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ forloop.parentloop.counter }}</td>
                                         <td>{{ voter.name }}</td>
                                         <td>{{ vote.option.name }}</td>
                                         <td>{{ vote.created_at }}</td>
@@ -205,6 +215,27 @@
         </div>
     </div>
 
+    <!-- Confirm Delete Modal -->
+    <div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-small ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i
+                            class="material-icons">clear</i></button>
+                </div>
+                <div class="modal-body text-center">
+                    <h5>Are you sure you want to remove
+                        <strong id="remove_name">Lenya Hope</strong> as a voter? </h5>
+                </div>
+                <div class="modal-footer text-center">
+                    <button type="button" class="btn btn-simple" data-dismiss="modal">Never mind</button>
+                    <a href="#" id="confirm_delete" class="btn btn-primary btn-simple">Yes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--    end small modal -->
 {% endblock %}
 
 {% block footer_script %}
@@ -214,6 +245,12 @@
             setTimeout(function () {
                 $('.card.wizard-card').addClass('active');
             }, 600);
-        })
+        });
+
+        function showDeleteModal(voter_name, voter_id) {
+            $('#remove_name').html(voter_name);
+            $('#confirm_delete').attr('href', '/polls/'+voter_id+'/remove-voter');
+            $('#confirmDelete').modal('show');
+        }
     </script>
 {% endblock %}
