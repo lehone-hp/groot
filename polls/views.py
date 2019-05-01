@@ -1,16 +1,19 @@
+import uuid
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from django.urls import reverse
 
-from polls.forms import SignUpForm, EditProfileForm, CreateElectionForm
-from polls.models import Poll, Option
+from polls.forms import SignUpForm, EditProfileForm, CreateElectionForm, AddVoterForm
+from polls.models import Poll, Option, Voter
 
 
 def index(request):
@@ -38,6 +41,45 @@ def polls(request):
         'pending': pending,
         'finished': finished
     })
+
+
+@login_required
+def poll_detail(request, poll_id):
+    poll = get_object_or_404(Poll, pk=poll_id)
+    return render(request, 'polls/election_detail.html', {
+        'poll': poll
+    })
+
+
+@login_required
+def add_voter(request, poll_id):
+    poll = get_object_or_404(Poll, pk=poll_id)
+
+    if request.method == 'POST':
+        form = AddVoterForm(request.POST)
+        if form.is_valid():
+            old_voter = poll.voter_set.filter(email=form.cleaned_data.get('email')).count()
+            if old_voter <= 0:
+                voter = Voter()
+                voter.name = form.cleaned_data.get('name')
+                voter.email = form.cleaned_data.get('email')
+                voter.access_token = uuid.uuid4()
+                voter.poll = poll
+                voter.save()
+
+                # TODO change the to_email and generate the voting link here
+                send_mail('Voter Invitation',
+                          'Hello, '+str(voter.name)+"\n\n"
+                          'You have been invited to take part in the following election by voting:\n\n'
+                                +poll.name+': '+poll.description+'\n\n'
+                          'To do so, please follow the link provided: http://localhost:8000/polls/2/ \n\n'
+                          'regards, Groot Team.',
+                          'Groot Vote <noreply@groot.com>',
+                          ['lehone4hope@gmail.com'])
+
+            return redirect('/polls/'+str(poll_id)+'/?voter=true')
+    else:
+        return redirect('polls:detail', poll_id)
 
 
 @login_required

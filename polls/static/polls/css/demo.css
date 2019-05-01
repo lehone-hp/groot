@@ -451,3 +451,7 @@
 .w-100 {
     width: 100% !important;
 }
+
+.detail-table tr td{
+    width: 0% !important;
+}

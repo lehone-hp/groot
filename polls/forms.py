@@ -24,3 +24,8 @@ class CreateElectionForm(forms.Form):
     start_date = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'])
     end_date = forms.DateTimeField(input_formats=['%d/%m/%Y %H:%M'])
     max_votes = forms.IntegerField()
+
+
+class AddVoterForm(forms.Form):
+    name = forms.CharField(max_length=30, required=True)
+    email = forms.CharField(max_length=5000, required=True)

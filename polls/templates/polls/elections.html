@@ -5,7 +5,6 @@
 
 {% block content %}
 
-
     <div class="card">
         <div class="card-header card-header-tabs" data-background-color="rose">
             <div class="nav-tabs-navigation">
@@ -59,7 +58,7 @@
                         {% for poll in total %}
                         <div class="col-md-4 col-sm-6">
                             <div class="card">
-                                <div class="card-header card-header-text" data-background-color="orange">
+                                <div class="card-header card-header-tabs" data-background-color="orange">
                                     <h4 class="card-title">{{ poll.name }}</h4>
                                     <p class="category">{{ poll.created_at }}</p>
                                 </div>
@@ -69,6 +68,10 @@
                                         <tr>
                                             <td class="text-warning">Status</td>
                                             <td>{{ poll.status }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Starts</td>
+                                            <td>{{ poll.start }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-warning">Ends</td>
@@ -85,9 +88,9 @@
                                         </tbody>
                                     </table>
                                     <div class="text-right">
-                                        <button class="btn btn-just-icon  btn-warning">
+                                        <a href="{% url 'polls:detail' poll.id %}" class="btn btn-just-icon  btn-warning">
                                             <i class="fa fa-eye"></i>
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -100,7 +103,7 @@
                         {% for poll in active %}
                         <div class="col-md-4 col-sm-6">
                             <div class="card">
-                                <div class="card-header card-header-text" data-background-color="orange">
+                                <div class="card-header card-header-tabs" data-background-color="orange">
                                     <h4 class="card-title">{{ poll.name }}</h4>
                                     <p class="category">{{ poll.created_at }}</p>
                                 </div>
@@ -110,6 +113,10 @@
                                         <tr>
                                             <td class="text-warning">Status</td>
                                             <td>{{ poll.status }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Starts</td>
+                                            <td>{{ poll.start }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-warning">Ends</td>
@@ -126,9 +133,9 @@
                                         </tbody>
                                     </table>
                                     <div class="text-right">
-                                        <button class="btn btn-just-icon  btn-warning">
+                                        <a href="{% url 'polls:detail' poll.id %}" class="btn btn-just-icon  btn-warning">
                                             <i class="fa fa-eye"></i>
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -141,7 +148,7 @@
                         {% for poll in finished %}
                         <div class="col-md-4 col-sm-6">
                             <div class="card">
-                                <div class="card-header card-header-text" data-background-color="orange">
+                                <div class="card-header card-header-tabs" data-background-color="orange">
                                     <h4 class="card-title">{{ poll.name }}</h4>
                                     <p class="category">{{ poll.created_at }}</p>
                                 </div>
@@ -151,6 +158,10 @@
                                         <tr>
                                             <td class="text-warning">Status</td>
                                             <td>{{ poll.status }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Starts</td>
+                                            <td>{{ poll.start }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-warning">Ends</td>
@@ -167,9 +178,9 @@
                                         </tbody>
                                     </table>
                                     <div class="text-right">
-                                        <button class="btn btn-just-icon  btn-warning">
+                                        <a href="{% url 'polls:detail' poll.id %}" class="btn btn-just-icon  btn-warning">
                                             <i class="fa fa-eye"></i>
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -182,7 +193,7 @@
                         {% for poll in pending %}
                         <div class="col-md-4 col-sm-6">
                             <div class="card">
-                                <div class="card-header card-header-text" data-background-color="orange">
+                                <div class="card-header card-header-tabs" data-background-color="orange">
                                     <h4 class="card-title">{{ poll.name }}</h4>
                                     <p class="category">{{ poll.created_at }}</p>
                                 </div>
@@ -192,6 +203,10 @@
                                         <tr>
                                             <td class="text-warning">Status</td>
                                             <td>{{ poll.status }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-warning">Starts</td>
+                                            <td>{{ poll.start }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-warning">Ends</td>
@@ -208,9 +223,9 @@
                                         </tbody>
                                     </table>
                                     <div class="text-right">
-                                        <button class="btn btn-just-icon  btn-warning">
+                                        <a href="{% url 'polls:detail' poll.id %}" class="btn btn-just-icon  btn-warning">
                                             <i class="fa fa-eye"></i>
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -221,6 +236,4 @@
             </div>
         </div>
     </div>
-
-
 {% endblock %}

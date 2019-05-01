@@ -94,6 +94,7 @@
                 </li>
 
                 <li class="{% ifequal request.resolver_match.url_name 'elections' %}{{ 'active' }}{% endifequal %}
+                           {% ifequal request.resolver_match.url_name 'detail' %}{{ 'active' }}{% endifequal %}
                            {% ifequal request.resolver_match.url_name 'create_election' %}{{ 'active' }}{% endifequal %}">
                     <a href="{% url 'polls:elections' %}">
                         <i class="material-icons">bubble_chart</i>

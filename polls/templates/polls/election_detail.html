@@ -1,0 +1,219 @@
+{% extends "polls/base.html" %}
+
+{% block title %}{{ poll.name }}{% endblock %}
+{% block heading %}Election: {{ poll.name }}{% endblock %}
+
+{% block content %}
+
+    <div class="card">
+        <div class="card-header card-header-tabs" data-background-color="rose">
+            <div class="nav-tabs-navigation">
+                <div class="nav-tabs-wrapper">
+                    <span class="nav-tabs-title">{{ poll.name }}:</span>
+                    <ul class="nav nav-tabs display-inline" data-tabs="tabs">
+                        <li class="{% if request.GET.voter == false %}{{ 'active' }}{% endif %}">
+                        <a href="#details" data-toggle="tab">
+                            <i class="material-icons">details</i>
+                                Detail
+                                <div class="ripple-container"></div>
+                            </a>
+                        </li>
+                        <li class="{% if request.GET.voter %}{{ 'active' }}{% endif %}">
+                            <a href="#voters" data-toggle="tab" aria-expanded="true">
+                                <i class="material-icons">people</i>
+                                Voters
+                                <div class="ripple-container"></div>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="#ballots" data-toggle="tab">
+                                <i class="material-icons">how_to_vote</i>
+                                Ballots
+                                <div class="ripple-container"></div>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="#candidates" data-toggle="tab">
+                                <i class="material-icons">how_to_reg</i>
+                                Candidates
+                                <div class="ripple-container"></div>
+                            </a>
+                        </li>
+                        <li class="float-right">
+                            <a href="#" class="btn btn-primary">
+                                <i class="material-icons">edit</i>
+                                Edit
+                                <div class="ripple-container"></div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card-content">
+            <div class="tab-content">
+                <div class="tab-pane {% if request.GET.voter == false %}{{ 'active' }}{% endif %}" id="details">
+                    <h3  class="text-warning" style="padding-left: 8px">{{ poll.name }}</h3>
+                    <div class="row">
+                        <div class="col-md-7 table-responsive">
+                            <table class="table  detail-table">
+                                <tbody>
+                                    <tr>
+                                        <td>{{ poll.description }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-5 table-responsive">
+                            <table class="table detail-table">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-warning">Created On</td>
+                                        <td>{{ poll.created_at}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-warning">Start Date</td>
+                                        <td>{{ poll.start}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-warning">End Date</td>
+                                        <td>{{ poll.expiration}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-warning">Maximum Votes</td>
+                                        <td>{{ poll.max_votes }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane {% if request.GET.voter %}{{ 'active' }}{% endif %}" id="voters">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-8 table-responsive">
+                            <table class="table table-striped detail-table">
+                        <thead>
+                            <tr>
+                                <th>SN</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Voted</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for voter in poll.voter_set.all %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ voter.name }}</td>
+                                <td>{{ voter.email }}</td>
+                                <td>
+                                    {% if voter.vote_set.count > 0 %}
+                                    <i class="material-icons text-success">done</i>
+                                    {% else %}
+                                    <i class="material-icons text-danger">close</i>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="card">
+                                <form action="{% url 'polls:add_voter' poll.id %}" method="POST">
+                                {% csrf_token %}
+
+                                <div class="card-header card-header-icon" data-background-color="rose">
+                                    <i class="material-icons">person_add</i>
+                                </div>
+                                <div class="card-content">
+                                    <h4 class="card-title">Add Voter</h4>
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Name
+                                            <star>*</star>
+                                        </label>
+                                        <input class="form-control"
+                                               name="name"
+                                               type="text"
+                                               required="true"/>
+                                    </div>
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Email Address
+                                            <star>*</star>
+                                        </label>
+                                        <input class="form-control"
+                                               name="email"
+                                               type="email"
+                                               required="true"/>
+                                    </div>
+
+                                    <div class="form-footer text-right">
+                                        <button type="submit" class="btn btn-rose btn-fill">Add Voter</button>
+                                    </div>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="ballots">
+                    <table class="table table-striped detail-table">
+                        <thead>
+                            <tr>
+                                <th>SN</th>
+                                <th>Voter</th>
+                                <th>Candidate</th>
+                                <th>Date Casted</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for voter in poll.voter_set.all %}
+                                {% for vote in poll.vote_set.all %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ voter.name }}</td>
+                                        <td>{{ vote.option.name }}</td>
+                                        <td>{{ vote.created_at }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-pane" id="candidates">
+                    <table class="table table-striped detail-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Votes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for cand in poll.option_set.all %}
+                            <tr>
+                                <td>{{ cand.name }}</td>
+                                <td>{{ cand.votes }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footer_script %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            demo.initMaterialWizard();
+            setTimeout(function () {
+                $('.card.wizard-card').addClass('active');
+            }, 600);
+        })
+    </script>
+{% endblock %}
