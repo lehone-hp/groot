@@ -50,10 +50,10 @@
                                                     <star>*</star>
                                                 </label>
                                                 <input class="form-control"
-                                                       type="text"/>
+                                                       type="text" id="candidate_name"/>
                                             </div>
                                             <div class="text-right">
-                                                <button type="button" class="btn btn-rose">Add Candidate</button>
+                                                <button type="button" id="add_candidate_btn" class="btn btn-rose">Add Candidate</button>
                                             </div>
                                         </div>
                                     </div>
@@ -65,15 +65,8 @@
                                         </div>
                                         <div class="card-content table-responsive">
                                             <table class="table table-hover">
-                                                <tbody>
-                                                <tr>
-                                                    <td class="w-100">Lenya Hope Nembi</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-just-icon btn-simple btn-danger float-right">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
+                                                <tbody id="en_tbody">
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -114,6 +107,29 @@
             setTimeout(function () {
                 $('.card.wizard-card').addClass('active');
             }, 600);
+
+            $('#add_candidate_btn').on('click', function () {
+                const new_name = $('#candidate_name').val();
+
+                if (new_name) {
+                    $('#en_tbody').append(
+                        '<tr>' +
+                        '    <td class="w-100">'+new_name+'' +
+                        '    <input type="hidden" name="candidate[]" value="'+new_name+'">' +
+                        '    </td>' +
+                        '    <td>' +
+                        '        <button type="button" onclick="removeTr(this)" class="btn btn-just-icon btn-simple btn-danger float-right remove_candidate">' +
+                        '            <i class="fa fa-trash"></i>' +
+                        '        </button>' +
+                        '    </td>' +
+                        '</tr>'
+                    );
+                }
+                $('#candidate_name').val('')
+            });
         });
+        function removeTr(button) {
+            $(button).parent().parent().remove()
+        }
     </script>
 {% endblock %}
