@@ -455,3 +455,19 @@
 .detail-table tr td{
     width: 0% !important;
 }
+
+.vote-header {
+    color: #fff;
+    margin-bottom: 40px;
+}
+.vote-header h2{
+    font-weight: bold;
+}
+
+.thanks-tick {
+    color: green !important;
+    font-size: 250px !important;
+    border: solid 3px !important;
+    border-radius: 50% !important;
+    margin-top: 35px;
+}

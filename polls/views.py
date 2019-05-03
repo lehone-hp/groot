@@ -6,21 +6,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-
-# Create your views here.
-from django.urls import reverse
 
 from polls.forms import SignUpForm, EditProfileForm, CreateElectionForm, AddVoterForm
 from polls.models import Poll, Option, Voter
 
 
 def index(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('polls:dashboard'))
-    else:
-        return HttpResponseRedirect(reverse('login'))
+    return render(request, 'polls/index.html')
 
 
 @login_required
@@ -95,6 +88,14 @@ def remove_voter(request, voter_id):
         voter.delete()
 
     return redirect('/polls/' + str(poll.id) + '/?voter=true')
+
+
+def vote(request):
+    return render(request, 'polls/vote.html')
+
+
+def vote_thanks(request):
+    return render(request, 'polls/vote_thanks.html')
 
 
 @login_required

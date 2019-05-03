@@ -1,0 +1,86 @@
+{% extends "polls/visitor_blade.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-10 col-sm-12 col-md-offset-1">
+            <div class="text-center vote-header">
+                <h2>Election: Another Election</h2>
+                <h4>You can cast your vote by selecting at most 1 candidate(s) for this election</h4>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-md-6">
+                    <div class="card">
+                        <div class="card-header card-header-tabs" data-background-color="rose">
+                            <h4 class="card-title">Election Candidates</h4>
+                            <p class="category">Add candidates to your ballot and press the vote button</p>
+                        </div>
+                        <div class="card-content table-responsive">
+                            <table class="table table-hover">
+                                <tbody id="en_tbody">
+                                <tr>
+                                    <td class="w-100">  Candidate Name 1</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-just-icon btn-simple btn-success float-right">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-100">  Candidate Name 1</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-just-icon btn-simple btn-success float-right">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="w-100">  Candidate Name 1</td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-just-icon btn-simple btn-success float-right">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div class="card">
+                        <div class="card-header card-header-tabs" data-background-color="rose">
+                            <h4 class="card-title">Your Ballot</h4>
+                            <p class="category">You can remove selected candidates from your ballot</p>
+                        </div>
+                        <div class="card-content table-responsive">
+                            <table class="table table-hover">
+                                <tbody id="en_tbody">
+                                <tr>
+                                    <td class="w-100"> Candidate Name 2
+                                        <input type="hidden" name="candidate[]" value="">
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-just-icon btn-simple btn-danger float-right">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="float-right">
+                        <button class="btn">Cancel</button>
+                        <button class="btn btn-rose">Vote</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

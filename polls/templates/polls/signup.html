@@ -1,97 +1,104 @@
-{% extends "registration/base.html" %}
+{% extends "polls/visitor_blade.html" %}
 
 {% block title %}Register{% endblock %}
 
 {% block content %}
 
-    {% if form.errors %}
-        <p>{{  form.errors }}</p>
-    {% endif %}
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4">
+        <div class="card">
+                {% if form.errors %}
+                    <p>{{ form.errors }}</p>
+                {% endif %}
 
-    <div class="card">
-        <form id="LoginValidation" method="post" action="{% url 'signup' %}">
-            {% csrf_token %}
+                <form id="LoginValidation" method="post" action="{% url 'signup' %}">
+                    {% csrf_token %}
 
-            <div class="card-header card-header-icon" data-background-color="rose">
-                <i class="material-icons">contacts</i>
+                    <div class="card-header card-header-icon" data-background-color="rose">
+                        <i class="material-icons">contacts</i>
+                    </div>
+                    <div class="card-content">
+                        <h4 class="card-title">Signup Form</h4>
+                        <div class="form-group label-floating">
+                            <label class="control-label">{{ form.username.label_tag }}
+                                <star>*</star>
+                            </label>
+                            <input class="form-control"
+                                   name="username"
+                                   type="text"
+                                   value="{% if form.username.value %} {{ form.username.value }} {% endif %}"
+                                   required="true"
+                            />
+                        </div>
+                        <div class="form-group label-floating">
+                            <label class="control-label">First Name
+                                <star>*</star>
+                            </label>
+                            <input class="form-control"
+                                   name="first_name"
+                                   type="text"
+                                   value="{% if form.first_name.value %} {{ form.first_name.value }} {% endif %}"
+                                   required="true"
+                            />
+                        </div>
+                        <div class="form-group label-floating">
+                            <label class="control-label">Last Name
+                                <star>*</star>
+                            </label>
+                            <input class="form-control"
+                                   name="last_name"
+                                   type="text"
+                                   value="{% if form.last_name.value %} {{ form.last_name.value }} {% endif %}"
+                                   required="true"
+                            />
+                        </div>
+                        <div class="form-group label-floating">
+                            <label class="control-label">Email Address
+                                <star>*</star>
+                            </label>
+                            <input class="form-control"
+                                   name="email"
+                                   type="email" value="{% if form.email.value %} {{ form.email.value }} {% endif %}"
+                                   required="true"
+                            />
+                        </div>
+                        <div class="form-group label-floating">
+                            <label class="control-label">Password
+                                <star>*</star>
+                            </label>
+                            <input class="form-control"
+                                   name="password1"
+                                   type="password"
+                                   required="true"
+                            />
+                        </div>
+                        <div class="form-group label-floating">
+                            <label class="control-label">Re-enter Password
+                                <star>*</star>
+                            </label>
+                            <input class="form-control"
+                                   name="password2"
+                                   type="password"
+                                   required="true"
+                            />
+                        </div>
+
+                        <div class="category form-category">
+                            <star>*</star>
+                            Required fields
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-rose btn-fill btn-wd btn-block">Register</button>
+                            <input type="hidden" name="next" value="{{ next }}">
+                        </div>
+
+                        {# Assumes you setup the password_reset view in your URLconf #}
+                        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+                    </div>
+                </form>
             </div>
-            <div class="card-content">
-                <h4 class="card-title">Signup Form</h4>
-                <div class="form-group label-floating">
-                    <label class="control-label">{{ form.username.label_tag }}
-                        <star>*</star>
-                    </label>
-                    <input class="form-control"
-                           name="username"
-                           type="text" value="{% if form.username.value %} {{ form.username.value }} {% endif %}"
-                           required="true"
-                    />
-                </div>
-                <div class="form-group label-floating">
-                    <label class="control-label">First Name
-                        <star>*</star>
-                    </label>
-                    <input class="form-control"
-                           name="first_name"
-                           type="text" value="{% if form.first_name.value %} {{ form.first_name.value }} {% endif %}"
-                           required="true"
-                    />
-                </div>
-                <div class="form-group label-floating">
-                    <label class="control-label">Last Name
-                        <star>*</star>
-                    </label>
-                    <input class="form-control"
-                           name="last_name"
-                           type="text" value="{% if form.last_name.value %} {{ form.last_name.value }} {% endif %}"
-                           required="true"
-                    />
-                </div>
-                <div class="form-group label-floating">
-                    <label class="control-label">Email Address
-                        <star>*</star>
-                    </label>
-                    <input class="form-control"
-                           name="email"
-                           type="email" value="{% if form.email.value %} {{ form.email.value }} {% endif %}"
-                           required="true"
-                    />
-                </div>
-                <div class="form-group label-floating">
-                    <label class="control-label">Password
-                        <star>*</star>
-                    </label>
-                    <input class="form-control"
-                           name="password1"
-                           type="password"
-                           required="true"
-                    />
-                </div>
-                <div class="form-group label-floating">
-                    <label class="control-label">Re-enter Password
-                        <star>*</star>
-                    </label>
-                    <input class="form-control"
-                           name="password2"
-                           type="password"
-                           required="true"
-                    />
-                </div>
-
-                <div class="category form-category">
-                    <star>*</star>
-                    Required fields
-                </div>
-
-                <div class="text-center">
-                    <button type="submit" class="btn btn-rose btn-fill btn-wd btn-block">Register</button>
-                    <input type="hidden" name="next" value="{{ next }}">
-                </div>
-
-                {# Assumes you setup the password_reset view in your URLconf #}
-                <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
-            </div>
-        </form>
+        </div>
     </div>
 {% endblock %}
 
