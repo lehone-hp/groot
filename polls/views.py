@@ -22,7 +22,17 @@ def index(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'polls/dashboard.html')
+    total = Poll.objects.all().order_by('-created_at').count()
+    pending = Poll.objects.filter(status=Poll.CREATED).order_by('-created_at').count()
+    active = Poll.objects.filter(status=Poll.ACTIVE).order_by('-created_at').count()
+    finished = Poll.objects.filter(status=Poll.FINISHED).order_by('-created_at').count()
+
+    return render(request, 'polls/dashboard.html', {
+        'total': total,
+        'active': active,
+        'pending': pending,
+        'finished': finished
+    })
 
 
 @login_required
