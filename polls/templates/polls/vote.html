@@ -1,13 +1,13 @@
 {% extends "polls/visitor_blade.html" %}
 
-{% block title %}Profile{% endblock %}
+{% block title %}{{ poll.name }}{% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-md-10 col-sm-12 col-md-offset-1">
             <div class="text-center vote-header">
-                <h2>Election: Another Election</h2>
-                <h4>You can cast your vote by selecting at most 1 candidate(s) for this election</h4>
+                <h2>Election: {{ poll.name }}</h2>
+                <h4>You can cast your vote by selecting at most {{ poll.max_votes }} candidate{% if poll.max_votes > 1 %}{{ 's' }}{% endif %} for this election</h4>
             </div>
             <div class="row">
                 <div class="col-sm-6 col-md-6">
@@ -18,69 +18,108 @@
                         </div>
                         <div class="card-content table-responsive">
                             <table class="table table-hover">
-                                <tbody id="en_tbody">
-                                <tr>
-                                    <td class="w-100">  Candidate Name 1</td>
-                                    <td>
-                                        <button type="button"
-                                                class="btn btn-just-icon btn-simple btn-success float-right">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="w-100">  Candidate Name 1</td>
-                                    <td>
-                                        <button type="button"
-                                                class="btn btn-just-icon btn-simple btn-success float-right">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="w-100">  Candidate Name 1</td>
-                                    <td>
-                                        <button type="button"
-                                                class="btn btn-just-icon btn-simple btn-success float-right">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                <tbody id="en_cand">
+                                {% for candidate in poll.option_set.all %}
+                                    <tr>
+                                        <td class="w-100">{{ candidate.name }}</td>
+                                        <td>
+                                            <button type="button"
+                                                    onclick="add_candidate('{{ candidate.name }}', {{ candidate.id }}, this)"
+                                                    class="btn btn-just-icon btn-simple btn-success float-right">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-6">
-                    <div class="card">
-                        <div class="card-header card-header-tabs" data-background-color="rose">
-                            <h4 class="card-title">Your Ballot</h4>
-                            <p class="category">You can remove selected candidates from your ballot</p>
+                    <form action="{% url 'polls:cast_vote' voter.id %}" method="POST">
+                        {% csrf_token %}
+
+                        <div class="card">
+                            <div class="card-header card-header-tabs" data-background-color="rose">
+                                <h4 class="card-title">Your Ballot</h4>
+                                <p class="category">You can remove selected candidates from your ballot</p>
+                            </div>
+                            <div class="card-content table-responsive">
+                                <table class="table table-hover">
+                                    <tbody id="ballot">
+
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="card-content table-responsive">
-                            <table class="table table-hover">
-                                <tbody id="en_tbody">
-                                <tr>
-                                    <td class="w-100"> Candidate Name 2
-                                        <input type="hidden" name="candidate[]" value="">
-                                    </td>
-                                    <td>
-                                        <button type="button"
-                                                class="btn btn-just-icon btn-simple btn-danger float-right">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <div class="float-right">
+                            <a href="{% url 'index' %}" class="btn">Cancel</a>
+                            <button type="submit" class="btn btn-rose">Vote</button>
                         </div>
-                    </div>
-                    <div class="float-right">
-                        <button class="btn">Cancel</button>
-                        <button class="btn btn-rose">Vote</button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block footer_script %}
+    <script>
+        let ballot_count = 0;
+        const MAX_VOTE = {{ poll.max_votes }}
+
+        function add_candidate(name, id, button) {
+
+            if (ballot_count < MAX_VOTE) {
+                const tr = $(button).parent().parent();
+                tr.fadeOut( 600, function() {
+                    tr.remove();
+                });
+
+                let html = '' +
+                    '<tr>' +
+                    ' <td class="w-100"> '+ name +
+                    '     <input type="hidden" name="candidate[]" value="'+id+'">' +
+                    ' </td>' +
+                    ' <td>' +
+                    '     <button type="button"' +
+                    '             onclick="remove_candidate(\''+name+'\', '+id+', this)"' +
+                    '             class="btn btn-just-icon btn-simple btn-danger float-right">' +
+                    '         <i class="fa fa-trash"></i>' +
+                    '     </button>' +
+                    ' </td>' +
+                    '</tr>';
+
+                html = $(html).hide().fadeIn(600);
+                $('#ballot').append(html);
+                ballot_count++;
+            } else {
+                alert('Maximum allowed candidate per ballot is: '+MAX_VOTE);
+            }
+        };
+
+        function remove_candidate(name, id, button) {
+            const tr = $(button).parent().parent();
+            tr.fadeOut( 600, function() {
+                tr.remove();
+            });
+
+            let html = '' +
+                '<tr>' +
+                ' <td class="w-100"> '+ name +' </td>' +
+                ' <td>' +
+                '     <button type="button"' +
+                '             onclick="add_candidate(\''+name+'\', '+id+', this)"' +
+                '             class="btn btn-just-icon btn-simple btn-success float-right">' +
+                '        <i class="fa fa-plus"></i>' +
+                '     </button>' +
+                ' </td>' +
+                '</tr>';
+
+            html = $(html).hide().fadeIn(600);
+            $('#en_cand').append(html);
+            ballot_count--;
+        }
+    </script>
 {% endblock %}

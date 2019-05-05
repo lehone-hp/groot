@@ -60,6 +60,14 @@
                         Home
                     </a>
                 </li>
+                {% if request.user.is_authenticated %}
+                <li class="{% ifequal request.resolver_match.url_name 'dashboard' %}{{ 'active' }}{% endifequal %}">
+                    <a href="{% url 'polls:dashboard' %}">
+                        <i class="material-icons">dashboard</i>
+                        Dashboard
+                    </a>
+                </li>
+                {% else %}
                 <li class="{% ifequal request.resolver_match.url_name 'login' %}{{ 'active' }}{% endifequal %}">
                     <a href="{% url 'login' %}">
                         <i class="material-icons">lock_open</i>
@@ -72,6 +80,7 @@
                         Register
                     </a>
                 </li>
+                {% endif %}
             </ul>
         </div>
     </div>

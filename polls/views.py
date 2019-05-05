@@ -5,11 +5,14 @@ from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
+from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 
 from polls.forms import SignUpForm, EditProfileForm, CreateElectionForm, AddVoterForm
-from polls.models import Poll, Option, Voter
+from polls.models import Poll, Option, Voter, Vote
 
 
 def index(request):
@@ -60,12 +63,14 @@ def add_voter(request, poll_id):
                 voter.poll = poll
                 voter.save()
 
-                # TODO change the to_email and generate the voting link here
+                link = request.build_absolute_uri('/')[:-1]
+                link = link + reverse('polls:vote', kwargs={'access_token': voter.access_token})
+
                 send_mail('Voter Invitation',
                           'Hello, '+str(voter.name)+"\n\n"
                           'You have been invited to take part in the following election by voting:\n\n'
-                                +poll.name+': '+poll.description+'\n\n'
-                          'To do so, please follow the link provided: http://localhost:8000/polls/2/ \n\n'
+                                +poll.name+'\n\n'
+                          'To do so, please follow the link provided: '+link+' \n\n'
                           'regards, Groot Team.',
                           'Groot Vote <noreply@groot.com>',
                           ['lehone4hope@gmail.com'])
@@ -90,12 +95,59 @@ def remove_voter(request, voter_id):
     return redirect('/polls/' + str(poll.id) + '/?voter=true')
 
 
-def vote(request):
-    return render(request, 'polls/vote.html')
+def vote(request, access_token):
+    try:
+        voter = Voter.objects.get(access_token=access_token)
+        poll = voter.poll
+        if voter.vote_set.count() > 0:
+            return redirect('polls:vote_thanks', voter.id)
+
+        return render(request, 'polls/vote.html', {
+            'voter': voter,
+            'poll': poll
+        })
+    except ObjectDoesNotExist:
+        raise Http404
 
 
-def vote_thanks(request):
-    return render(request, 'polls/vote_thanks.html')
+def cast_vote(request, voter_id):
+    try:
+        voter = Voter.objects.get(pk=voter_id)
+    except ObjectDoesNotExist:
+        return Http404
+
+    if request.method == 'POST':
+        poll = voter.poll
+
+        candidate_ids = request.POST.getlist('candidate[]')
+        if candidate_ids:
+            for c_id in candidate_ids:
+                try:
+                    candidate = Option.objects.get(pk=c_id)
+                    vote1 = Vote()
+                    vote1.voter = voter
+                    vote1.poll = poll
+                    vote1.option_id = candidate.id
+                    vote1.save()
+
+                    candidate.votes = candidate.votes + 1
+                    candidate.save()
+                except ObjectDoesNotExist:
+                    print('An error occurred')
+        return redirect('polls:vote_thanks', voter_id)
+    else:
+        return Http404
+
+
+def vote_thanks(request, voter_id):
+    try:
+        voter = Voter.objects.get(pk=voter_id)
+    except ObjectDoesNotExist:
+        voter = None
+
+    return render(request, 'polls/vote_thanks.html', {
+        'voter': voter
+    })
 
 
 @login_required
