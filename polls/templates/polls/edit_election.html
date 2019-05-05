@@ -1,0 +1,200 @@
+{% extends "polls/base.html" %}
+{% load static %}
+
+{% block title %}Edit Election{% endblock %}
+{% block heading %}Edit Election: {{ poll.name }}{% endblock %}
+
+{% block content %}
+    <div class="col-sm-8 col-sm-offset-2">
+        <!--      Wizard container        -->
+        <div class="wizard-container">
+            <div class="card wizard-card" data-color="rose" id="wizardProfile">
+                <form action="{% url 'polls:edit_election' poll.id %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="wizard-navigation">
+                        <ul>
+                            <li><a href="#about" data-toggle="tab">Step 1</a></li>
+                            <li><a href="#account" data-toggle="tab">Step 2</a></li>
+                            <li><a href="#address" data-toggle="tab">Step 3</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="tab-content">
+                        <div class="tab-pane" id="about">
+                            <h4 class="info-text"> Basic information about the Election</h4>
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Name
+                                            <small>(required)</small>
+                                        </label>
+                                        <input name="name" type="text"
+                                               class="form-control"
+                                               value="{{ poll.name }}"
+                                               required>
+                                    </div>
+
+                                    <div class="form-group label-floating">
+                                        <label class="control-label">Description
+                                            <small>(required)</small>
+                                        </label>
+                                        <textarea name="description"
+                                                  class="form-control"
+                                                  rows="7"
+                                                  required>{{ poll.description }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="account">
+                            <h4 class="info-text"> Register Candidates for the Election</h4>
+                            <div class="row">
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="card">
+                                        <div class="card-header card-header-text" data-background-color="rose">
+                                            <i class="material-icons">person_add</i>
+                                        </div>
+
+                                        <div class="card-content">
+                                            <div class="form-group label-floating">
+                                                <label class="control-label">Candidate Name
+                                                    <star>*</star>
+                                                </label>
+                                                <input class="form-control"
+                                                       type="text" id="candidate_name"/>
+                                            </div>
+                                            <div class="text-right">
+                                                <button type="button" id="add_candidate_btn" class="btn btn-rose">Add
+                                                    Candidate
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-8">
+                                    <div class="card">
+                                        <div class="card-header card-header-text" data-background-color="rose">
+                                            <p>Enlisted Candidates</p>
+                                        </div>
+                                        <div class="card-content table-responsive">
+                                            <table class="table table-hover">
+                                                <tbody id="en_tbody">
+                                                    {% for candidate in poll.option_set.all %}
+                                                    <tr>
+                                                        <td class="w-100"> {{ candidate.name }}
+                                                            <input type="hidden" name="candidate[]" value="{{ candidate.name }}">
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" onclick="removeTr(this)"
+                                                                    class="btn btn-just-icon btn-simple btn-danger float-right remove_candidate">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="address">
+                            <div class="col-sm-12">
+                                <h4 class="info-text"> Additional Settings </h4>
+                                <div class="card">
+                                    <div class="card-content">
+                                        <div class="form-group label-floating">
+                                            <label class="control-label">Start Date
+                                                <small>(required)</small>
+                                            </label>
+                                            <input type="text" class="form-control datetimepicker1"
+                                                   name="start_date"
+                                                   value="{{ poll.start|date:'d/m/Y H:i' }}"
+                                                   required />
+                                            <span class="bmd-help text-muted">Date and Time when the poll will be open for voting.</span>
+                                        </div>
+                                        <div class="form-group label-floating">
+                                            <label class="control-label">End Date
+                                                <small>(required)</small>
+                                            </label>
+                                            <input type="text" class="form-control datetimepicker1"
+                                                   name="end_date"
+                                                   value="{{ poll.expiration|date:'d/m/Y H:i' }}"
+                                                   required />
+                                            <span class="bmd-help text-muted">Date and Time when the poll will be closed for voting.</span>
+                                        </div>
+                                        <div class="form-group label-floating">
+                                            <label class="control-label">Max Candidate Selection
+                                                <small>(required)</small>
+                                            </label>
+                                            <input type="number" class="form-control"
+                                                   name="max_votes"
+                                                   value="{{ poll.max_votes }}"
+                                                   required />
+                                            <span class="bmd-help text-muted">Maximum number of candidates each voter can select in a ballot.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wizard-footer">
+                        <div class="pull-right">
+                            <input type='button' class='btn btn-next btn-fill btn-rose btn-wd' name='next'
+                                   value='Next'/>
+                            <input type='submit' class='btn btn-finish btn-fill btn-rose btn-wd' name='finish'
+                                   value='Finish'/>
+                        </div>
+
+                        <div class="pull-left">
+                            <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous'
+                                   value='Previous'/>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </form>
+            </div>
+        </div> <!-- wizard container -->
+    </div>
+{% endblock %}
+
+{% block footer_script %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            demo.initMaterialWizard();
+            setTimeout(function () {
+                $('.card.wizard-card').addClass('active');
+            }, 600);
+
+            $(".datetimepicker1").datetimepicker({
+                format: 'd/m/Y H:i',
+            });
+
+            $('#add_candidate_btn').on('click', function () {
+                const new_name = $('#candidate_name').val();
+
+                if (new_name) {
+                    $('#en_tbody').append(
+                        '<tr>' +
+                        '    <td class="w-100">' + new_name + '' +
+                        '    <input type="hidden" name="candidate[]" value="' + new_name + '">' +
+                        '    </td>' +
+                        '    <td>' +
+                        '        <button type="button" onclick="removeTr(this)" class="btn btn-just-icon btn-simple btn-danger float-right remove_candidate">' +
+                        '            <i class="fa fa-trash"></i>' +
+                        '        </button>' +
+                        '    </td>' +
+                        '</tr>'
+                    );
+                }
+                $('#candidate_name').val('')
+            });
+        });
+
+        function removeTr(button) {
+            $(button).parent().parent().remove()
+        }
+    </script>
+{% endblock %}

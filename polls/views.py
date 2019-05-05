@@ -7,6 +7,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
+from django import forms
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -172,10 +173,47 @@ def create_poll(request):
                     option.poll = poll
                     option.save()
 
-            return redirect('polls:elections')
+            return redirect('polls:detail', poll.id)
     else:
         form = CreateElectionForm()
     return render(request, 'polls/create_election.html', {'form': form})
+
+
+@login_required
+def edit_poll(request, poll_id):
+    try:
+        poll = Poll.objects.get(pk=poll_id)
+    except ObjectDoesNotExist:
+        return Http404
+
+    if request.method == 'POST':
+        form = CreateElectionForm(request.POST)
+        if form.is_valid():
+            poll.name = form.cleaned_data.get('name')
+            poll.description = form.cleaned_data.get('description')
+            poll.max_votes = form.cleaned_data.get('max_votes')
+            poll.start = form.cleaned_data.get('start_date')
+            poll.expiration = form.cleaned_data.get('end_date')
+            poll.save()
+
+            for candidate in poll.option_set.all():
+                candidate.delete()
+
+            candidates = request.POST.getlist('candidate[]')
+            if candidates:
+                for candidate in candidates:
+                    option = Option()
+                    option.name = candidate
+                    option.poll = poll
+                    option.save()
+
+            return redirect('polls:detail', poll.id)
+    else:
+        form = CreateElectionForm()
+    return render(request, 'polls/edit_election.html', {
+        'form': form,
+        'poll': poll
+    })
 
 
 @login_required
