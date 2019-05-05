@@ -40,11 +40,13 @@
                             </a>
                         </li>
                         <li class="float-right">
+                            {% ifequal poll.status 'Created' %}
                             <a href="{% url 'polls:edit_election' poll.id %}" class="btn btn-primary">
                                 <i class="material-icons">edit</i>
                                 Edit
                                 <div class="ripple-container"></div>
                             </a>
+                            {% endifequal %}
                         </li>
                     </ul>
                 </div>
@@ -91,7 +93,11 @@
 
                 <div class="tab-pane {% if request.GET.voter %}{{ 'active' }}{% endif %}" id="voters">
                     <div class="row">
-                        <div class="col-sm-6 col-md-8 table-responsive">
+                        <div class="{% ifnotequal poll.status 'Finished' %}
+                                        {{ 'col-sm-6 col-md-8' }}
+                                    {% else %}
+                                        {{ 'col-sm-12' }}
+                                    {% endifnotequal %} table-responsive">
                             <table class="table table-striped detail-table">
                         <thead>
                             <tr>
@@ -129,7 +135,9 @@
                         </tbody>
                     </table>
                         </div>
-                        <div class="col-sm-6 col-md-4">
+
+                        {% ifnotequal poll.status 'Finished' %}
+                            <div class="col-sm-6 col-md-4">
                             <div class="card">
                                 <form action="{% url 'polls:add_voter' poll.id %}" method="POST">
                                 {% csrf_token %}
@@ -165,6 +173,7 @@
                             </form>
                             </div>
                         </div>
+                        {% endifnotequal %}
                     </div>
                 </div>
 

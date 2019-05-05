@@ -7,8 +7,16 @@
         <div class="col-md-10 col-sm-12 col-md-offset-1">
             <div class="text-center vote-header">
                 <h2>Election: {{ poll.name }}</h2>
-                <h4>You can cast your vote by selecting at most {{ poll.max_votes }} candidate{% if poll.max_votes > 1 %}{{ 's' }}{% endif %} for this election</h4>
+                {% if poll.status == 'Active' %}
+                    <h4>You can cast your vote by selecting at most {{ poll.max_votes }}
+                        candidate{% if poll.max_votes > 1 %}{{ 's' }}{% endif %} for this election</h4>
+                {% elif poll.status == 'Created' %}
+                    <h4>This election will be open for voting on <b>{{ poll.start }}</b></h4>
+                {% elif poll.status == 'Finished' %}
+                    <h4>This election has already been completed</h4>
+                {% endif %}
             </div>
+        {% if poll.status == 'Active' %}
             <div class="row">
                 <div class="col-sm-6 col-md-6">
                     <div class="card">
@@ -60,6 +68,32 @@
                     </form>
                 </div>
             </div>
+        {% endif %}
+
+        {% if poll.status == 'Active' %}
+            <div class="row">
+                <div class="col-sm-6 col-md-6 col-sm-offset-3 col-md-offset-3">
+                    <div class="card">
+                        <div class="card-header card-header-tabs" data-background-color="rose">
+                            <h4 class="card-title">Election Results</h4>
+                            <p class="category">List of votes per candidate</p>
+                        </div>
+                        <div class="card-content table-responsive">
+                            <table class="table table-hover">
+                                <tbody id="en_cand">
+                                {% for candidate in poll.option_set.all %}
+                                    <tr>
+                                        <td class="w-100">{{ candidate.name }}</td>
+                                        <td>{{ candidate.votes }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         </div>
     </div>
 {% endblock %}
