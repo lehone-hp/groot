@@ -12,8 +12,8 @@
                     <span class="nav-tabs-title">{{ poll.name }}:</span>
                     <ul class="nav nav-tabs display-inline" data-tabs="tabs">
                         <li class="{% if request.GET.voter == false %}{{ 'active' }}{% endif %}">
-                        <a href="#details" data-toggle="tab">
-                            <i class="material-icons">details</i>
+                            <a href="#details" data-toggle="tab">
+                                <i class="material-icons">details</i>
                                 Detail
                                 <div class="ripple-container"></div>
                             </a>
@@ -41,11 +41,11 @@
                         </li>
                         <li class="float-right">
                             {% ifequal poll.status 'Created' %}
-                            <a href="{% url 'polls:edit_election' poll.id %}" class="btn btn-primary">
-                                <i class="material-icons">edit</i>
-                                Edit
-                                <div class="ripple-container"></div>
-                            </a>
+                                <a href="{% url 'polls:edit_election' poll.id %}" class="btn btn-primary">
+                                    <i class="material-icons">edit</i>
+                                    Edit
+                                    <div class="ripple-container"></div>
+                                </a>
                             {% endifequal %}
                         </li>
                     </ul>
@@ -55,36 +55,63 @@
         <div class="card-content">
             <div class="tab-content">
                 <div class="tab-pane {% if request.GET.voter == false %}{{ 'active' }}{% endif %}" id="details">
-                    <h3  class="text-warning" style="padding-left: 8px">{{ poll.name }}</h3>
+                    <h3 class="text-warning" style="padding-left: 8px">
+                        {{ poll.name }}
+                        {% ifequal poll.status 'Active' %}
+                            <span class="badge badge-success">On going</span>
+                        {% endifequal %}
+                        {% ifequal poll.status 'Finished' %}
+                            <span class="badge badge-success">Closed</span>
+                        {% endifequal %}
+                    </h3>
                     <div class="row">
                         <div class="col-md-7 table-responsive">
                             <table class="table  detail-table">
                                 <tbody>
-                                    <tr>
-                                        <td>{{ poll.description }}</td>
-                                    </tr>
+                                <tr>
+                                    <td>{{ poll.description }}</td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div class="col-md-5 table-responsive">
                             <table class="table detail-table">
                                 <tbody>
-                                    <tr>
-                                        <td class="text-warning">Created On</td>
-                                        <td>{{ poll.created_at}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-warning">Start Date</td>
-                                        <td>{{ poll.start}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-warning">End Date</td>
-                                        <td>{{ poll.expiration}}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-warning">Maximum Votes</td>
-                                        <td>{{ poll.max_votes }}</td>
-                                    </tr>
+                                <tr>
+                                    <td class="text-warning">Created On</td>
+                                    <td>{{ poll.created_at }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-warning">Start Date</td>
+                                    <td>{{ poll.start }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-warning">End Date</td>
+                                    <td>{{ poll.expiration }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-warning">Maximum Votes</td>
+                                    <td>{{ poll.max_votes }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-warning">Action</td>
+                                    <td>
+                                        {% ifequal poll.status 'Created' %}
+                                            <a href="{% url 'polls:open_election' poll.id %}"
+                                               class="btn btn-primary btn-sm">
+                                                Open Election
+                                                <div class="ripple-container"></div>
+                                            </a>
+                                        {% endifequal %}
+                                        {% ifequal poll.status 'Active' %}
+                                            <a href="{% url 'polls:close_election' poll.id %}"
+                                               class="btn btn-warning btn-sm">
+                                                Close Election
+                                                <div class="ripple-container"></div>
+                                            </a>
+                                        {% endifequal %}
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -99,80 +126,83 @@
                                         {{ 'col-sm-12' }}
                                     {% endifnotequal %} table-responsive">
                             <table class="table table-striped detail-table">
-                        <thead>
-                            <tr>
-                                <th>SN</th>
-                                <th>Name</th>
-                                <th>Voted</th>
-                                <th>Email</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for voter in poll.voter_set.all %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ voter.name }}</td>
-                                <td>
-                                    {% if voter.vote_set.count > 0 %}
-                                    <i class="material-icons text-success">done</i>
-                                    {% else %}
-                                    <i class="material-icons text-danger">close</i>
-                                    {% endif %}
-                                </td>
-                                <td>{{ voter.email }}</td>
-                                <td>
-                                    <button class="btn btn-just-icon btn-simple btn-primary">
-                                      <i class="material-icons">edit</i>
-                                    </button>
-                                    <button class="btn btn-just-icon btn-simple btn-danger"
-                                            onclick="showDeleteModal('{{ voter.name }}', {{ voter.id }})">
-                                        <i class="material-icons">delete</i>
-                                    </button>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                <thead>
+                                <tr>
+                                    <th>SN</th>
+                                    <th>Name</th>
+                                    <th>Voted</th>
+                                    <th>Email</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for voter in poll.voter_set.all %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ voter.name }}</td>
+                                        <td>
+                                            {% if voter.vote_set.count > 0 %}
+                                                <i class="material-icons text-success">done</i>
+                                            {% else %}
+                                                <i class="material-icons text-danger">close</i>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ voter.email }}</td>
+                                        <td>
+                                            {% ifequal poll.status 'Created' %}
+                                                <button class="btn btn-just-icon btn-simple btn-primary">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+
+                                                <button class="btn btn-just-icon btn-simple btn-danger"
+                                                        onclick="showDeleteModal('{{ voter.name }}', {{ voter.id }})">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                            {% endifequal %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
 
                         {% ifnotequal poll.status 'Finished' %}
                             <div class="col-sm-6 col-md-4">
-                            <div class="card">
-                                <form action="{% url 'polls:add_voter' poll.id %}" method="POST">
-                                {% csrf_token %}
+                                <div class="card">
+                                    <form action="{% url 'polls:add_voter' poll.id %}" method="POST">
+                                        {% csrf_token %}
 
-                                <div class="card-header card-header-icon" data-background-color="rose">
-                                    <i class="material-icons">person_add</i>
-                                </div>
-                                <div class="card-content">
-                                    <h4 class="card-title">Add Voter</h4>
-                                    <div class="form-group label-floating">
-                                        <label class="control-label">Name
-                                            <star>*</star>
-                                        </label>
-                                        <input class="form-control"
-                                               name="name"
-                                               type="text"
-                                               required="true"/>
-                                    </div>
-                                    <div class="form-group label-floating">
-                                        <label class="control-label">Email Address
-                                            <star>*</star>
-                                        </label>
-                                        <input class="form-control"
-                                               name="email"
-                                               type="email"
-                                               required="true"/>
-                                    </div>
+                                        <div class="card-header card-header-icon" data-background-color="rose">
+                                            <i class="material-icons">person_add</i>
+                                        </div>
+                                        <div class="card-content">
+                                            <h4 class="card-title">Add Voter</h4>
+                                            <div class="form-group label-floating">
+                                                <label class="control-label">Name
+                                                    <star>*</star>
+                                                </label>
+                                                <input class="form-control"
+                                                       name="name"
+                                                       type="text"
+                                                       required="true"/>
+                                            </div>
+                                            <div class="form-group label-floating">
+                                                <label class="control-label">Email Address
+                                                    <star>*</star>
+                                                </label>
+                                                <input class="form-control"
+                                                       name="email"
+                                                       type="email"
+                                                       required="true"/>
+                                            </div>
 
-                                    <div class="form-footer text-right">
-                                        <button type="submit" class="btn btn-rose btn-fill">Add Voter</button>
-                                    </div>
+                                            <div class="form-footer text-right">
+                                                <button type="submit" class="btn btn-rose btn-fill">Add Voter</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
                             </div>
-                        </div>
                         {% endifnotequal %}
                     </div>
                 </div>
@@ -180,24 +210,24 @@
                 <div class="tab-pane" id="ballots">
                     <table class="table table-striped detail-table">
                         <thead>
-                            <tr>
-                                <th>SN</th>
-                                <th>Voter</th>
-                                <th>Candidate</th>
-                                <th>Date Casted</th>
-                            </tr>
+                        <tr>
+                            <th>SN</th>
+                            <th>Voter</th>
+                            <th>Candidate</th>
+                            <th>Date Casted</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {% for voter in poll.voter_set.all %}
-                                {% for vote in voter.vote_set.all %}
-                                    <tr>
-                                        <td>{{ forloop.parentloop.counter }}</td>
-                                        <td>{{ voter.name }}</td>
-                                        <td>{{ vote.option.name }}</td>
-                                        <td>{{ vote.created_at }}</td>
-                                    </tr>
-                                {% endfor %}
+                        {% for voter in poll.voter_set.all %}
+                            {% for vote in voter.vote_set.all %}
+                                <tr>
+                                    <td>{{ forloop.parentloop.counter }}</td>
+                                    <td>{{ voter.name }}</td>
+                                    <td>{{ vote.option.name }}</td>
+                                    <td>{{ vote.created_at }}</td>
+                                </tr>
                             {% endfor %}
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -205,15 +235,17 @@
                 <div class="tab-pane" id="candidates">
                     <table class="table table-striped detail-table">
                         <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Votes</th>
-                            </tr>
+                        <tr>
+                            <th style="width: 15%">Name</th>
+                            <th>Bio</th>
+                            <th>Votes</th>
+                        </tr>
                         </thead>
                         <tbody>
                         {% for cand in poll.option_set.all %}
                             <tr>
                                 <td>{{ cand.name }}</td>
+                                <td>{{ cand.description }}</td>
                                 <td>{{ cand.votes }}</td>
                             </tr>
                         {% endfor %}
@@ -258,7 +290,7 @@
 
         function showDeleteModal(voter_name, voter_id) {
             $('#remove_name').html(voter_name);
-            $('#confirm_delete').attr('href', '/polls/'+voter_id+'/remove-voter');
+            $('#confirm_delete').attr('href', '/polls/' + voter_id + '/remove-voter');
             $('#confirmDelete').modal('show');
         }
     </script>

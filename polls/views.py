@@ -110,7 +110,7 @@ def vote(request, access_token):
     try:
         voter = Voter.objects.get(access_token=access_token)
         poll = voter.poll
-        if voter.vote_set.count() > 0:
+        if voter.vote_set.count() > 0 and poll.status == 'Active':
             return redirect('polls:vote_thanks', voter.id)
 
         return render(request, 'polls/vote.html', {
@@ -176,10 +176,12 @@ def create_poll(request):
             poll.save()
 
             candidates = request.POST.getlist('candidate[]')
+            candidates_bio = request.POST.getlist('candidate_bio[]')
             if candidates:
-                for candidate in candidates:
+                for i in range(len(candidates)):
                     option = Option()
-                    option.name = candidate
+                    option.name = candidates[i]
+                    option.description = candidates_bio[i] if candidates_bio[i] else ''
                     option.poll = poll
                     option.save()
 
@@ -224,6 +226,30 @@ def edit_poll(request, poll_id):
         'form': form,
         'poll': poll
     })
+
+
+@login_required
+def open_poll(request, poll_id):
+    try:
+        poll = Poll.objects.get(pk=poll_id)
+    except ObjectDoesNotExist:
+        return Http404
+
+    poll.status = 'Active'
+    poll.save()
+    return redirect('polls:detail', poll_id)
+
+
+@login_required
+def close_poll(request, poll_id):
+    try:
+        poll = Poll.objects.get(pk=poll_id)
+    except ObjectDoesNotExist:
+        return Http404
+
+    poll.status = 'Finished'
+    poll.save()
+    return redirect('polls:detail', poll_id)
 
 
 @login_required
